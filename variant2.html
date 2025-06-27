@@ -1,0 +1,1516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drama Box Clone - Variant 2: Hybrid Framework Approach</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #ffffff;
+            min-height: 100vh;
+            box-shadow: 0 0 50px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 60px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="pattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="2" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect x="0" y="0" width="100" height="100" fill="url(%23pattern)"/></svg>') repeat;
+            opacity: 0.1;
+            animation: float 20s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(-20px, -20px) rotate(180deg); }
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .main-title {
+            font-size: 3.2em;
+            font-weight: 800;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            letter-spacing: -0.02em;
+        }
+        
+        .variant-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+        
+        .recommended-badge {
+            display: inline-block;
+            background: #27ae60;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+            margin-left: 15px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .subtitle {
+            font-size: 1.4em;
+            font-weight: 400;
+            opacity: 0.95;
+            margin-bottom: 30px;
+        }
+        
+        .meta-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+        }
+        
+        .meta-card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .meta-label {
+            font-size: 0.9em;
+            opacity: 0.8;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .meta-value {
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+        
+        .content {
+            padding: 60px 40px;
+        }
+        
+        .section {
+            margin-bottom: 60px;
+            page-break-inside: avoid;
+        }
+        
+        .section-title {
+            font-size: 2.2em;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #667eea;
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: #27ae60;
+        }
+        
+        .subsection-title {
+            font-size: 1.6em;
+            font-weight: 600;
+            color: #2c3e50;
+            margin: 40px 0 20px 0;
+            position: relative;
+            padding-left: 20px;
+        }
+        
+        .subsection-title::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin: 30px 0;
+        }
+        
+        .feature-card {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            border-left: 5px solid #667eea;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+        
+        .feature-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .feature-list li {
+            padding: 8px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .feature-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #27ae60;
+            font-weight: bold;
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+        }
+        
+        .highlight-title {
+            font-size: 1.4em;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .budget-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            min-width: 600px; /* Minimum width for table content */
+        }
+        
+        .budget-table th,
+        .budget-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .budget-table th {
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .budget-table tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .tech-stack {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            border: 2px dashed #667eea;
+        }
+        
+        .tech-category {
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        
+        .architecture-diagram {
+            background: #f8f9fa;
+            padding: 40px;
+            border-radius: 15px;
+            margin: 30px 0;
+            text-align: center;
+            border: 2px dashed #667eea;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .timeline-container {
+            margin: 30px 0;
+        }
+        
+        .timeline-phase {
+            background: white;
+            margin: 20px 0;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .timeline-header {
+            background: #667eea;
+            color: white;
+            padding: 20px;
+            font-weight: 600;
+            font-size: 1.2em;
+        }
+        
+        .timeline-content {
+            padding: 25px;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            min-width: 700px; /* Minimum width for comparison table */
+        }
+        
+        /* Table Container for Horizontal Scroll */
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin: 20px 0;
+            border-radius: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .table-container .comparison-table,
+        .table-container .budget-table {
+            margin: 0; /* Remove margin when inside container */
+        }
+        
+        .comparison-table th,
+        .comparison-table td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .comparison-table th {
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .comparison-table .recommended {
+            background: #d4edda;
+            font-weight: 600;
+            color: #155724;
+        }
+        
+        .contact-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 50px 40px;
+            text-align: center;
+            margin-top: 60px;
+        }
+        
+        .contact-title {
+            font-size: 2em;
+            font-weight: 700;
+            margin-bottom: 30px;
+        }
+        
+        .contact-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .contact-card {
+            background: rgba(255,255,255,0.1);
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .contact-label {
+            font-size: 0.9em;
+            opacity: 0.8;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .contact-value {
+            font-size: 1.3em;
+            font-weight: 600;
+        }
+        
+        @media print {
+            body { background: white; }
+            .container { box-shadow: none; }
+            .feature-card:hover { transform: none; box-shadow: none; }
+        }
+        
+        @media (max-width: 768px) {
+            .header { padding: 40px 20px; }
+            .content { padding: 40px 20px; }
+            .main-title { font-size: 2.5em; }
+            .section-title { font-size: 1.8em; }
+        }
+        
+        /* Navigation Styles */
+        .navigation {
+            background: rgba(0,0,0,0.9);
+            padding: 15px 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 40px;
+        }
+        
+        .nav-logo {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #667eea;
+            text-decoration: none;
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            gap: 30px;
+        }
+        
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-menu a:hover,
+        .nav-menu a.active {
+            color: #667eea;
+        }
+        
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #667eea;
+            transition: width 0.3s ease;
+        }
+        
+        .nav-menu a:hover::after,
+        .nav-menu a.active::after {
+            width: 100%;
+        }
+        
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5em;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+        
+        .mobile-menu-toggle:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+        
+        .mobile-menu-toggle:focus {
+            outline: 2px solid #667eea;
+            outline-offset: 2px;
+        }
+        
+        body {
+            padding-top: 80px;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-container {
+                padding: 0 20px;
+            }
+            
+            .nav-menu {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: rgba(0,0,0,0.95);
+                flex-direction: column;
+                padding: 20px;
+                gap: 15px;
+            }
+            
+            .nav-menu.active {
+                display: flex;
+            }
+            
+            .mobile-menu-toggle {
+                display: block;
+            }
+            
+            /* Mobile Table Styles */
+            .table-container {
+                margin: 20px -20px; /* Extend to screen edges on mobile */
+                border-radius: 0;
+                box-shadow: none;
+            }
+            
+            .budget-table, .comparison-table {
+                font-size: 0.85em;
+                border-radius: 0;
+                margin: 0;
+                min-width: 600px;
+            }
+            
+            .budget-table th, .comparison-table th,
+            .budget-table td, .comparison-table td {
+                padding: 10px 8px;
+                min-width: 100px;
+            }
+            
+            .budget-table thead, .comparison-table thead,
+            .budget-table tbody, .comparison-table tbody {
+                display: table-header-group;
+            }
+            
+            .budget-table tr, .comparison-table tr {
+                display: table-row;
+            }
+            
+            .budget-table th, .comparison-table th,
+            .budget-table td, .comparison-table td {
+                display: table-cell;
+                padding: 10px 8px;
+                white-space: nowrap;
+                min-width: 100px;
+            }
+            
+            .budget-table th:first-child, .comparison-table th:first-child,
+            .budget-table td:first-child, .comparison-table td:first-child {
+                min-width: 150px;
+                position: sticky;
+                left: 0;
+                background: white;
+                box-shadow: 2px 0 4px rgba(0,0,0,0.1);
+                z-index: 1;
+            }
+            
+            .budget-table th, .comparison-table th {
+                background: #667eea !important;
+                color: white !important;
+            }
+            
+            .budget-table th:first-child, .comparison-table th:first-child {
+                background: #667eea !important;
+            }
+            
+            /* Mobile Feature Grid */
+            .feature-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                margin: 20px 0;
+            }
+            
+            .feature-card {
+                padding: 20px;
+                width: 100%;
+                box-sizing: border-box;
+                overflow-wrap: break-word;
+            }
+            
+            /* Mobile Meta Info */
+            .meta-info {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .meta-card {
+                padding: 15px;
+            }
+            
+            /* Mobile Architecture Diagram */
+            .architecture-diagram {
+                padding: 20px;
+                font-size: 0.8em;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .architecture-diagram pre {
+                white-space: pre-wrap;
+                word-wrap: break-word;
+            }
+            
+            /* Mobile Timeline */
+            .timeline-container {
+                margin: 20px 0;
+            }
+            
+            .timeline-phase {
+                margin: 15px 0;
+            }
+            
+            .timeline-header {
+                padding: 15px;
+                font-size: 1.1em;
+            }
+            
+            .timeline-content {
+                padding: 15px;
+            }
+            
+            /* Mobile Tech Stack */
+            .tech-stack {
+                padding: 20px;
+                margin: 20px 0;
+            }
+            
+            /* Mobile Highlight Boxes */
+            .highlight-box {
+                padding: 20px;
+                margin: 20px 0;
+            }
+            
+            .highlight-title {
+                font-size: 1.2em;
+            }
+            
+            /* Mobile Contact Section */
+            .contact-section {
+                padding: 30px 20px;
+            }
+            
+            .contact-info {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .contact-card {
+                padding: 15px;
+            }
+            
+            /* Mobile Text Adjustments */
+            .subsection-title {
+                font-size: 1.3em;
+                margin: 30px 0 15px 0;
+                padding-left: 15px;
+            }
+            
+            .feature-title {
+                font-size: 1.2em;
+            }
+            
+            /* Mobile Section Spacing */
+            .section {
+                margin-bottom: 40px;
+            }
+            
+            /* Mobile Variant Badge */
+            .variant-badge {
+                font-size: 1em;
+                padding: 8px 15px;
+            }
+            
+            .recommended-badge {
+                display: block;
+                margin: 5px 0 0 0;
+                padding: 5px 12px;
+                font-size: 0.8em;
+            }
+        }
+        
+        /* Extra Small Mobile Devices */
+        @media (max-width: 480px) {
+            /* Prevent horizontal overflow */
+            body {
+                overflow-x: hidden;
+            }
+            
+            .container {
+                max-width: 100%;
+                padding: 0 15px;
+            }
+            
+            .main-title {
+                font-size: 2em;
+            }
+            
+            .section-title {
+                font-size: 1.5em;
+            }
+            
+            .content {
+                padding: 20px 15px;
+            }
+            
+            .header {
+                padding: 30px 15px;
+            }
+            
+            .nav-container {
+                padding: 0 15px;
+            }
+            
+            .nav-logo {
+                font-size: 1.2em;
+            }
+            
+            .nav-menu {
+                padding: 15px;
+                gap: 10px;
+            }
+            
+            .budget-table, .comparison-table {
+                font-size: 0.75em;
+                min-width: 500px;
+            }
+            
+            .feature-card, .meta-card, .contact-card {
+                padding: 15px;
+                width: 100% !important;
+                max-width: 100% !important;
+                margin: 0 auto;
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+            }
+            
+            .feature-grid {
+                grid-template-columns: 1fr !important;
+                gap: 15px;
+                margin: 15px 0;
+            }
+            
+            .highlight-box {
+                padding: 15px;
+                margin: 15px 0;
+            }
+            
+            .architecture-diagram {
+                padding: 15px;
+                font-size: 0.7em;
+            }
+            
+            .timeline-header {
+                padding: 12px;
+                font-size: 1em;
+            }
+            
+            .timeline-content {
+                padding: 12px;
+            }
+            
+            /* Ensure all content fits within mobile viewport */
+            * {
+                max-width: 100%;
+                box-sizing: border-box;
+            }
+            
+            .feature-card,
+            .meta-card,
+            .contact-card,
+            .highlight-box,
+            .competitive-card {
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navigation">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">Drama Box Clone</a>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="variant1.html">Variant 1: MVP</a></li>
+                <li><a href="variant2.html" class="active">Variant 2: Hybrid</a></li>
+                <li><a href="variant3.html">Variant 3: Native</a></li>
+                <li><a href="variant4.html">Variant 4: Enterprise</a></li>
+            </ul>
+            <button class="mobile-menu-toggle">☰</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <div class="header-content">
+                <h1 class="main-title">DRAMA BOX CLONE</h1>
+                <div class="variant-badge">VARIANT 2<span class="recommended-badge">RECOMMENDED</span></div>
+                <p class="subtitle">Hybrid Framework Approach</p>
+                
+                <div class="meta-info">
+                    <div class="meta-card">
+                        <div class="meta-label">Prepared For</div>
+                        <div class="meta-value">Mr. Kunal Shah</div>
+                    </div>
+                    <div class="meta-card">
+                        <div class="meta-label">Document Type</div>
+                        <div class="meta-value">Technical Implementation Plan - Modern Hybrid Framework</div>
+                    </div>
+                    <div class="meta-card">
+                        <div class="meta-label">Date</div>
+                        <div class="meta-value">June 28, 2025</div>
+                    </div>
+                    <div class="meta-card">
+                        <div class="meta-label">Version</div>
+                        <div class="meta-value">1.0</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="content">
+            <div class="section">
+                <h2 class="section-title">EXECUTIVE SUMMARY</h2>
+                <p>Variant 2 represents a balanced approach using modern hybrid technologies, designed for Indian startups ready to invest in scalable architecture while maintaining cost efficiency. This React Native-based strategy delivers native-like mobile experience with cloud-first infrastructure.</p>
+                
+                <div class="highlight-box">
+                    <div class="highlight-title">Key Highlights</div>
+                    <ul class="feature-list">
+                        <li><strong>Total Investment:</strong> ₹25-35 Lakhs</li>
+                        <li><strong>Development Timeline:</strong> 8-12 months</li>
+                        <li><strong>Target Users:</strong> 50,000-200,000 concurrent users</li>
+                        <li><strong>Risk Level:</strong> Moderate technical risk, low market risk</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">TECHNICAL ARCHITECTURE</h2>
+                
+                <div class="subsection-title">Core Technology Stack</div>
+                
+                <div class="tech-stack">
+                    <div class="tech-category">Mobile Applications</div>
+                    <ul class="feature-list">
+                        <li>Framework: React Native with Expo managed workflow</li>
+                        <li>Navigation: React Navigation 6</li>
+                        <li>State Management: Redux Toolkit + RTK Query</li>
+                        <li>UI Components: NativeBase / React Native Elements</li>
+                        <li>Video Player: react-native-video with native controls</li>
+                        <li>Offline Storage: React Native MMKV</li>
+                    </ul>
+                </div>
+                
+                <div class="tech-stack">
+                    <div class="tech-category">Web Application</div>
+                    <ul class="feature-list">
+                        <li>Framework: React.js with Next.js for SSR</li>
+                        <li>Styling: Tailwind CSS</li>
+                        <li>PWA Support: Next.js PWA plugin</li>
+                    </ul>
+                </div>
+                
+                <div class="tech-stack">
+                    <div class="tech-category">Backend Infrastructure</div>
+                    <ul class="feature-list">
+                        <li>Backend-as-a-Service: Supabase</li>
+                        <li>Database: PostgreSQL (Supabase managed)</li>
+                        <li>Authentication: Supabase Auth with social logins</li>
+                        <li>Storage: Supabase Storage for user content</li>
+                        <li>Real-time: Supabase Realtime subscriptions</li>
+                    </ul>
+                </div>
+                
+                <div class="tech-stack">
+                    <div class="tech-category">Hosting & CDN</div>
+                    <ul class="feature-list">
+                        <li>API Hosting: Vercel/Railway</li>
+                        <li>CDN: Bunny.net (cost-effective)</li>
+                        <li>Video Streaming: Bunny.net Stream</li>
+                        <li>Static Assets: Vercel Edge Network</li>
+                    </ul>
+                </div>
+                
+                <div class="tech-stack">
+                    <div class="tech-category">Third-Party Services</div>
+                    <ul class="feature-list">
+                        <li>Payment Processing: Razorpay + Stripe (international)</li>
+                        <li>Push Notifications: Expo Push Notifications</li>
+                        <li>Analytics: Mixpanel (freemium tier)</li>
+                        <li>Search: Algolia (community plan)</li>
+                        <li>Email: Resend API</li>
+                        <li>SMS: Twilio (Indian numbers)</li>
+                    </ul>
+                </div>
+                
+                <div class="architecture-diagram">
+                    <h3>Architecture Diagram</h3>
+                    <pre>
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│  React Native   │    │    Next.js      │    │   Supabase      │
+│   Mobile Apps   │────│   Web App       │────│  Backend API    │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+         │                       │                       │
+         │              ┌─────────────────┐              │
+         └──────────────│   Bunny.net     │──────────────┘
+                        │  CDN + Video    │
+                        └─────────────────┘
+                                 │
+                   ┌──────────────────────────┐
+                   │   Third-Party Services   │
+                   │ Razorpay │ Mixpanel │Algolia│
+                   └──────────────────────────┘
+                    </pre>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">FEATURE SET & CAPABILITIES</h2>
+                
+                <div class="subsection-title">Enhanced Features</div>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-title">Advanced Streaming</div>
+                        <ul class="feature-list">
+                            <li>Adaptive bitrate streaming (HLS)</li>
+                            <li>4K video support (limited)</li>
+                            <li>Multiple audio tracks and subtitle support</li>
+                            <li>Chromecast support</li>
+                            <li>Picture-in-picture mode</li>
+                            <li>Download for offline viewing (mobile)</li>
+                        </ul>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-title">User Experience</div>
+                        <ul class="feature-list">
+                            <li>Native mobile apps (iOS/Android)</li>
+                            <li>Multiple user profiles per account</li>
+                            <li>Advanced search with filters</li>
+                            <li>Personalized recommendations (basic AI)</li>
+                            <li>Social login options</li>
+                            <li>Push notifications</li>
+                        </ul>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-title">Content Management</div>
+                        <ul class="feature-list">
+                            <li>Drag-and-drop content upload</li>
+                            <li>Automated video transcoding</li>
+                            <li>Content scheduling and publishing</li>
+                            <li>Analytics dashboard for creators</li>
+                            <li>Bulk upload capabilities</li>
+                        </ul>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-title">Monetization</div>
+                        <ul class="feature-list">
+                            <li>Multiple subscription tiers</li>
+                            <li>Pay-per-view content</li>
+                            <li>Creator revenue sharing</li>
+                            <li>Referral system</li>
+                            <li>Promotional codes and discounts</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="subsection-title">Platform Capabilities</div>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-title">Scalability Features</div>
+                        <ul class="feature-list">
+                            <li>Auto-scaling infrastructure</li>
+                            <li>Global CDN distribution</li>
+                            <li>Database read replicas</li>
+                            <li>Caching layers (Redis)</li>
+                            <li>Load balancing</li>
+                        </ul>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-title">Performance Optimizations</div>
+                        <ul class="feature-list">
+                            <li>Code splitting and lazy loading</li>
+                            <li>Image optimization and compression</li>
+                            <li>Efficient state management</li>
+                            <li>Background app refresh</li>
+                            <li>Smart caching strategies</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">DEVELOPMENT PLAN</h2>
+                
+                <div class="subsection-title">Team Structure (Balanced Team)</div>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-title">Development Team (6-8 people)</div>
+                        <ul class="feature-list">
+                            <li>Technical Lead: 1 person × 10 months</li>
+                            <li>React Native Developers: 2 persons × 8 months</li>
+                            <li>Backend Developer: 1 person × 8 months</li>
+                            <li>Full-Stack Developer: 1 person × 6 months</li>
+                            <li>UI/UX Designer: 1 person × 5 months</li>
+                            <li>DevOps Engineer: 1 person × 4 months</li>
+                            <li>QA Engineer: 1 person × 6 months</li>
+                        </ul>
+                        <p><strong>Total Effort: 53 person-months</strong></p>
+                    </div>
+                </div>
+                
+                <div class="subsection-title">Detailed Development Timeline</div>
+                <div class="timeline-container">
+                    <div class="timeline-phase">
+                        <div class="timeline-header">Phase 1: Foundation & Setup (Months 1-3)</div>
+                        <div class="timeline-content">
+                            <p><strong>Month 1:</strong></p>
+                            <ul class="feature-list">
+                                <li>Team onboarding and architecture planning</li>
+                                <li>Development environment setup</li>
+                                <li>Supabase project configuration</li>
+                                <li>Basic project structure (React Native + Next.js)</li>
+                            </ul>
+                            <p><strong>Month 2:</strong></p>
+                            <ul class="feature-list">
+                                <li>Authentication system implementation</li>
+                                <li>Database schema design and setup</li>
+                                <li>Basic UI components and navigation</li>
+                                <li>Video upload and processing pipeline</li>
+                            </ul>
+                            <p><strong>Month 3:</strong></p>
+                            <ul class="feature-list">
+                                <li>User registration and profile management</li>
+                                <li>Content browsing and search functionality</li>
+                                <li>Basic video player integration</li>
+                                <li>Admin panel foundation</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-phase">
+                        <div class="timeline-header">Phase 2: Core Features (Months 4-7)</div>
+                        <div class="timeline-content">
+                            <p><strong>Month 4:</strong></p>
+                            <ul class="feature-list">
+                                <li>Advanced video player with controls</li>
+                                <li>Subscription and payment integration</li>
+                                <li>Push notification system</li>
+                                <li>Content categorization and filtering</li>
+                            </ul>
+                            <p><strong>Month 5:</strong></p>
+                            <ul class="feature-list">
+                                <li>Multi-profile support</li>
+                                <li>Download functionality for mobile</li>
+                                <li>Social login integration</li>
+                                <li>Creator dashboard development</li>
+                            </ul>
+                            <p><strong>Month 6:</strong></p>
+                            <ul class="feature-list">
+                                <li>Advanced search with Algolia</li>
+                                <li>Basic recommendation engine</li>
+                                <li>Content analytics and reporting</li>
+                                <li>Performance optimization</li>
+                            </ul>
+                            <p><strong>Month 7:</strong></p>
+                            <ul class="feature-list">
+                                <li>Social features (sharing, ratings)</li>
+                                <li>Referral system implementation</li>
+                                <li>Admin panel advanced features</li>
+                                <li>Security hardening</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-phase">
+                        <div class="timeline-header">Phase 3: Enhancement & Testing (Months 8-10)</div>
+                        <div class="timeline-content">
+                            <p><strong>Month 8:</strong></p>
+                            <ul class="feature-list">
+                                <li>Comprehensive testing (unit, integration, E2E)</li>
+                                <li>Performance optimization and caching</li>
+                                <li>Bug fixes and UI polish</li>
+                                <li>Beta user testing program</li>
+                            </ul>
+                            <p><strong>Month 9:</strong></p>
+                            <ul class="feature-list">
+                                <li>App store submission process</li>
+                                <li>Production deployment setup</li>
+                                <li>Monitoring and analytics implementation</li>
+                                <li>Documentation and training</li>
+                            </ul>
+                            <p><strong>Month 10:</strong></p>
+                            <ul class="feature-list">
+                                <li>Final testing and quality assurance</li>
+                                <li>Launch preparation and marketing setup</li>
+                                <li>Team training and handover</li>
+                                <li>Go-live and post-launch support</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">BUDGET BREAKDOWN (INR)</h2>
+                
+                <div class="subsection-title">Development Costs</div>
+                <div class="table-container">
+                    <table class="budget-table">
+                    <thead>
+                        <tr>
+                            <th>Human Resources (12 months)</th>
+                            <th>Monthly Average</th>
+                            <th>Total Cost</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Technical Leadership</td>
+                            <td>₹70,000</td>
+                            <td>₹12,00,000</td>
+                        </tr>
+                        <tr>
+                            <td>Frontend Development</td>
+                            <td>₹70,000</td>
+                            <td>₹26,00,000</td>
+                        </tr>
+                        <tr>
+                            <td>Backend Development</td>
+                            <td>₹70,000</td>
+                            <td>₹15,00,000</td>
+                        </tr>
+                        <tr>
+                            <td>Specialized Development</td>
+                            <td>₹70,000</td>
+                            <td>₹5,60,000</td>
+                        </tr>
+                        <tr>
+                            <td>Testing & QA</td>
+                            <td>₹70,000</td>
+                            <td>₹11,20,000</td>
+                        </tr>
+                        <tr style="background: #667eea; color: white; font-weight: bold;">
+                            <td>Total Development</td>
+                            <td>-</td>
+                            <td>₹69,80,000</td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+                
+                <div class="subsection-title">Infrastructure Costs (Year 1)</div>
+                <div class="table-container">
+                    <table class="budget-table">
+                    <thead>
+                        <tr>
+                            <th>Service</th>
+                            <th>Annual Cost</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Supabase Pro</td>
+                            <td>₹2,40,000</td>
+                        </tr>
+                        <tr>
+                            <td>Bunny.net CDN</td>
+                            <td>₹1,80,000</td>
+                        </tr>
+                        <tr>
+                            <td>Vercel Pro</td>
+                            <td>₹36,000</td>
+                        </tr>
+                        <tr>
+                            <td>Third-party APIs</td>
+                            <td>₹1,20,000</td>
+                        </tr>
+                        <tr>
+                            <td>Development Tools</td>
+                            <td>₹84,000</td>
+                        </tr>
+                        <tr>
+                            <td>Domain & Security</td>
+                            <td>₹18,000</td>
+                        </tr>
+                        <tr style="background: #667eea; color: white; font-weight: bold;">
+                            <td>Total Infrastructure</td>
+                            <td>₹6,78,000</td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+                
+                <div class="subsection-title">Additional Costs</div>
+                <div class="table-container">
+                    <table class="budget-table">
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Cost</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Legal & Compliance</td>
+                            <td>₹2,00,000</td>
+                        </tr>
+                        <tr>
+                            <td>Marketing & Launch</td>
+                            <td>₹5,00,000</td>
+                        </tr>
+                        <tr>
+                            <td>App Store Fees</td>
+                            <td>₹30,000</td>
+                        </tr>
+                        <tr>
+                            <td>Contingency (10%)</td>
+                            <td>₹8,39,000</td>
+                        </tr>
+                        <tr style="background: #667eea; color: white; font-weight: bold;">
+                            <td>Total Additional</td>
+                            <td>₹15,69,000</td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+                
+                <div class="highlight-box">
+                    <div class="highlight-title">TOTAL PROJECT BUDGET: ₹92,27,000 (≈ ₹92 Lakhs)</div>
+                </div>
+                
+                <div class="subsection-title">Annual Operational Costs</div>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-title">Infrastructure Scaling</div>
+                        <ul class="feature-list">
+                            <li>Cloud Services: ₹4,20,000 - ₹8,40,000</li>
+                            <li>CDN & Streaming: ₹2,40,000 - ₹4,80,000</li>
+                            <li>Third-party Services: ₹2,00,000 - ₹4,00,000</li>
+                        </ul>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-title">Maintenance Team</div>
+                        <ul class="feature-list">
+                            <li>Technical Support: ₹8,40,000</li>
+                            <li>DevOps & Infrastructure: ₹6,00,000</li>
+                            <li>Content Operations: ₹4,20,000</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="highlight-box">
+                    <div class="highlight-title">Annual Operational Budget: ₹27,20,000 - ₹35,80,000</div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">VARIANT COMPARISON</h2>
+                
+                <div class="table-container">
+                    <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Aspect</th>
+                            <th>Variant 1</th>
+                            <th class="recommended">Variant 2 (Recommended)</th>
+                            <th>Variant 3</th>
+                            <th>Variant 4</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Initial Investment</strong></td>
+                            <td>₹10 Lakhs</td>
+                            <td class="recommended">₹25 Lakhs</td>
+                            <td>₹1.5 Crores</td>
+                            <td>₹2.5+ Crores</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Development Time</strong></td>
+                            <td>6-8 months</td>
+                            <td class="recommended">8-12 months</td>
+                            <td>12-18 months</td>
+                            <td>18-30 months</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Max Users</strong></td>
+                            <td>15K</td>
+                            <td class="recommended">200K</td>
+                            <td>10M+</td>
+                            <td>Unlimited</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Platforms</strong></td>
+                            <td>Web PWA</td>
+                            <td class="recommended">Mobile + Web</td>
+                            <td>Native All</td>
+                            <td>Native All</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Scalability</strong></td>
+                            <td>Limited</td>
+                            <td class="recommended">Moderate</td>
+                            <td>High</td>
+                            <td>Unlimited</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Customization</strong></td>
+                            <td>Basic</td>
+                            <td class="recommended">Moderate</td>
+                            <td>High</td>
+                            <td>Complete</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Risk Level</strong></td>
+                            <td>Low</td>
+                            <td class="recommended">Moderate</td>
+                            <td>Moderate</td>
+                            <td>High</td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">RISK MITIGATION STRATEGIES</h2>
+                
+                <div class="subsection-title">Technical Risks</div>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-title">Third-party Dependencies</div>
+                        <p><strong>Risk:</strong> Service outages or pricing changes</p>
+                        <p><strong>Mitigation:</strong> Comprehensive monitoring and backup plans</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-title">Cross-platform Consistency</div>
+                        <p><strong>Risk:</strong> Different user experience across platforms</p>
+                        <p><strong>Mitigation:</strong> Extensive testing on multiple devices</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-title">Performance Issues</div>
+                        <p><strong>Risk:</strong> Slow performance under load</p>
+                        <p><strong>Mitigation:</strong> Load testing and optimization protocols</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-title">Security Concerns</div>
+                        <p><strong>Risk:</strong> Data breaches or vulnerabilities</p>
+                        <p><strong>Mitigation:</strong> Regular security audits and updates</p>
+                    </div>
+                </div>
+                
+                <div class="subsection-title">Budget Risks</div>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-title">Development Overruns</div>
+                        <p><strong>Mitigation:</strong> Weekly sprint reviews and budget tracking</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-title">Infrastructure Scaling</div>
+                        <p><strong>Mitigation:</strong> Usage monitoring with automated alerts</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-title">Third-party Cost Increases</div>
+                        <p><strong>Mitigation:</strong> Budget buffers and alternative providers</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">SUCCESS METRICS & KPIs</h2>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-title">Technical Metrics</div>
+                        <ul class="feature-list">
+                            <li>App load time: <3 seconds</li>
+                            <li>Video start time: <2 seconds</li>
+                            <li>Crash rate: <0.1%</li>
+                            <li>API response time: <500ms</li>
+                        </ul>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-title">Business Metrics</div>
+                        <ul class="feature-list">
+                            <li>User acquisition: 10,000+ users in first 6 months</li>
+                            <li>User retention: >60% monthly retention</li>
+                            <li>App store rating: >4.0 stars</li>
+                            <li>Revenue: Break-even within 18 months</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">RECOMMENDATION</h2>
+                
+                <div class="highlight-box">
+                    <div class="highlight-title">Best Suited For</div>
+                    <ul class="feature-list">
+                        <li>Startups with moderate initial capital (₹25-40 Lakhs)</li>
+                        <li>Teams wanting native mobile experience</li>
+                        <li>Plans for rapid user growth and scaling</li>
+                        <li>Balancing features with development speed</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-title">Ideal Scenarios</div>
+                        <ul class="feature-list">
+                            <li>Targeting mobile-first user base</li>
+                            <li>Need for real-time features</li>
+                            <li>Plans for creator economy</li>
+                            <li>Expansion to multiple markets</li>
+                        </ul>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-title">Migration Options</div>
+                        <ul class="feature-list">
+                            <li><strong>From Variant 1:</strong> Natural upgrade path with enhanced features</li>
+                            <li><strong>To Variant 3:</strong> Possible evolution for enterprise scale</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="highlight-box">
+                    <div class="highlight-title">Next Steps</div>
+                    <ul class="feature-list">
+                        <li>Finalize team hiring and onboarding</li>
+                        <li>Set up development infrastructure</li>
+                        <li>Begin MVP development with core features</li>
+                        <li>Establish content partnerships</li>
+                        <li>Plan beta testing with target audience</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="contact-section">
+            <h2 class="contact-title">Contact Information</h2>
+            <div class="contact-info">
+                <div class="contact-card">
+                    <div class="contact-label">Contact Name</div>
+                    <div class="contact-value">Shreeyanshu</div>
+                </div>
+                <div class="contact-card">
+                    <div class="contact-label">Contact Number</div>
+                    <div class="contact-value">9904218241</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    // Mobile menu toggle functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const mobileToggle = document.querySelector('.mobile-menu-toggle');
+        const navMenu = document.querySelector('.nav-menu');
+        
+        if (mobileToggle && navMenu) {
+            mobileToggle.addEventListener('click', function() {
+                navMenu.classList.toggle('active');
+                
+                // Update ARIA attributes for accessibility
+                const isOpen = navMenu.classList.contains('active');
+                mobileToggle.setAttribute('aria-expanded', isOpen);
+                mobileToggle.innerHTML = isOpen ? '✕' : '☰';
+            });
+            
+            // Close menu when clicking outside
+            document.addEventListener('click', function(event) {
+                if (!event.target.closest('.navigation')) {
+                    navMenu.classList.remove('active');
+                    mobileToggle.setAttribute('aria-expanded', 'false');
+                    mobileToggle.innerHTML = '☰';
+                }
+            });
+            
+            // Close menu when pressing Escape key
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape' && navMenu.classList.contains('active')) {
+                    navMenu.classList.remove('active');
+                    mobileToggle.setAttribute('aria-expanded', 'false');
+                    mobileToggle.innerHTML = '☰';
+                    mobileToggle.focus();
+                }
+            });
+        }
+    });
+</script>
+</html>

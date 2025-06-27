@@ -1,0 +1,1434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drama Box Clone - Variant 1: Cost-Effective MVP Approach</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #ffffff;
+            min-height: 100vh;
+            box-shadow: 0 0 50px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 60px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="pattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="2" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect x="0" y="0" width="100" height="100" fill="url(%23pattern)"/></svg>') repeat;
+            opacity: 0.1;
+            animation: float 20s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(-20px, -20px) rotate(180deg); }
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .main-title {
+            font-size: 3.2em;
+            font-weight: 800;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            letter-spacing: -0.02em;
+        }
+        
+        .variant-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+        
+        .subtitle {
+            font-size: 1.4em;
+            font-weight: 400;
+            opacity: 0.95;
+            margin-bottom: 30px;
+        }
+        
+        .meta-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+        }
+        
+        .meta-card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .meta-label {
+            font-size: 0.9em;
+            opacity: 0.8;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .meta-value {
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+        
+        .content {
+            padding: 60px 40px;
+        }
+        
+        .section {
+            margin-bottom: 60px;
+            page-break-inside: avoid;
+        }
+        
+        .section-title {
+            font-size: 2.2em;
+            font-weight: 700;
+            color: #e74c3c;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #e74c3c;
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: #3498db;
+        }
+        
+        .subsection-title {
+            font-size: 1.6em;
+            font-weight: 600;
+            color: #2c3e50;
+            margin: 40px 0 20px 0;
+            position: relative;
+            padding-left: 20px;
+        }
+        
+        .subsection-title::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, #e74c3c, #c0392b);
+            border-radius: 2px;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin: 30px 0;
+        }
+        
+        .feature-card {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            border-left: 5px solid #e74c3c;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+        
+        .feature-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #e74c3c;
+            margin-bottom: 15px;
+        }
+        
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .feature-list li {
+            padding: 8px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .feature-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #27ae60;
+            font-weight: bold;
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+        }
+        
+        .highlight-title {
+            font-size: 1.4em;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .budget-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            min-width: 600px; /* Minimum width for table content */
+        }
+        
+        /* Table Container for Horizontal Scroll */
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin: 20px 0;
+            border-radius: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .table-container .budget-table {
+            margin: 0; /* Remove margin when inside container */
+        }
+        
+        .budget-table th,
+        .budget-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .budget-table th {
+            background: #e74c3c;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .budget-table tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .tech-stack {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            border: 2px dashed #e74c3c;
+        }
+        
+        .tech-category {
+            font-weight: 600;
+            color: #e74c3c;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        
+        .architecture-diagram {
+            background: #f8f9fa;
+            padding: 40px;
+            border-radius: 15px;
+            margin: 30px 0;
+            text-align: center;
+            border: 2px dashed #e74c3c;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .architecture-diagram pre {
+            min-width: 500px;
+            margin: 0;
+            white-space: pre;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+        
+        .limitations-box {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-left: 5px solid #f39c12;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 30px 0;
+        }
+        
+        .limitations-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #e67e22;
+            margin-bottom: 15px;
+        }
+        
+        .timeline-container {
+            margin: 30px 0;
+        }
+        
+        .timeline-phase {
+            background: white;
+            margin: 20px 0;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .timeline-header {
+            background: #e74c3c;
+            color: white;
+            padding: 20px;
+            font-weight: 600;
+            font-size: 1.2em;
+        }
+        
+        .timeline-content {
+            padding: 25px;
+        }
+        
+        .contact-section {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            padding: 50px 40px;
+            text-align: center;
+            margin-top: 60px;
+        }
+        
+        .contact-title {
+            font-size: 2em;
+            font-weight: 700;
+            margin-bottom: 30px;
+        }
+        
+        .contact-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .contact-card {
+            background: rgba(255,255,255,0.1);
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .contact-label {
+            font-size: 0.9em;
+            opacity: 0.8;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .contact-value {
+            font-size: 1.3em;
+            font-weight: 600;
+        }
+        
+        @media print {
+            body { background: white; }
+            .container { box-shadow: none; }
+            .feature-card:hover { transform: none; box-shadow: none; }
+        }
+        
+        /* Navigation Styles */
+        .navigation {
+            background: rgba(0,0,0,0.9);
+            padding: 15px 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 40px;
+        }
+        
+        .nav-logo {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #667eea;
+            text-decoration: none;
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            gap: 30px;
+        }
+        
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-menu a:hover,
+        .nav-menu a.active {
+            color: #667eea;
+        }
+        
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #667eea;
+            transition: width 0.3s ease;
+        }
+        
+        .nav-menu a:hover::after,
+        .nav-menu a.active::after {
+            width: 100%;
+        }
+        
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5em;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+        
+        .mobile-menu-toggle:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+        
+        .mobile-menu-toggle:focus {
+            outline: 2px solid #667eea;
+            outline-offset: 2px;
+        }
+        
+        body {
+            padding-top: 80px;
+        }
+        
+        @media print {
+            body { background: white; padding-top: 0; }
+            .container { box-shadow: none; }
+            .feature-card:hover { transform: none; box-shadow: none; }
+            .navigation { display: none; }
+        }
+        
+        @media (max-width: 768px) {
+            .header { padding: 40px 20px; }
+            .content { padding: 40px 20px; }
+            .main-title { font-size: 2.5em; }
+            .section-title { font-size: 1.8em; }
+            
+            .nav-container {
+                padding: 0 20px;
+            }
+            
+            .nav-menu {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: rgba(0,0,0,0.95);
+                flex-direction: column;
+                padding: 20px;
+                gap: 15px;
+            }
+            
+            .nav-menu.active {
+                display: flex;
+            }
+            
+            .mobile-menu-toggle {
+                display: block;
+            }
+            
+            /* Mobile Table Styles */
+            .table-container {
+                margin: 20px -20px; /* Extend to screen edges on mobile */
+                border-radius: 0;
+                box-shadow: none;
+            }
+            
+            .budget-table {
+                font-size: 0.9em;
+                min-width: 600px; /* Ensure minimum width */
+                border-radius: 0;
+                margin: 0;
+            }
+            
+            .budget-table th,
+            .budget-table td {
+                padding: 12px 10px;
+                min-width: 120px;
+            }
+            
+            /* Architecture Diagram Mobile */
+            .architecture-diagram {
+                padding: 20px 15px;
+                margin: 20px -20px; /* Extend to screen edges */
+                border-radius: 0;
+            }
+            
+            .architecture-diagram pre {
+                font-size: 0.7em;
+                min-width: 450px;
+                text-align: left;
+            }
+            
+            .budget-table thead,
+            .budget-table tbody {
+                display: block;
+            }
+            
+            .budget-table thead {
+                display: none;
+            }
+            
+            .budget-table tr {
+                display: block;
+                background: white;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                margin-bottom: 15px;
+                padding: 15px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            }
+            
+            .budget-table td,
+            .budget-table th {
+                display: block;
+                text-align: left !important;
+                border: none;
+                padding: 8px 0;
+                white-space: normal;
+            }
+            
+            .budget-table td:first-child {
+                font-weight: 600;
+                color: #e74c3c;
+                font-size: 1.1em;
+                margin-bottom: 8px;
+                border-bottom: 1px solid #eee;
+                padding-bottom: 8px;
+            }
+            
+            .budget-table td:not(:first-child):before {
+                content: attr(data-label) ": ";
+                font-weight: 600;
+                color: #666;
+                margin-right: 8px;
+            }
+            
+            /* Fallback for tables without data-labels */
+            .budget-table tr:nth-child(1) td:nth-child(2):before { content: "Duration: "; }
+            .budget-table tr:nth-child(1) td:nth-child(3):before { content: "Cost per Month: "; }
+            .budget-table tr:nth-child(1) td:nth-child(4):before { content: "Total Cost: "; }
+            
+            /* Mobile Feature Grid */
+            .feature-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                margin: 20px 0;
+            }
+            
+            .feature-card {
+                padding: 20px;
+                width: 100%;
+                box-sizing: border-box;
+                overflow-wrap: break-word;
+            }
+            
+            /* Mobile Meta Info */
+            .meta-info {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .meta-card {
+                padding: 15px;
+            }
+            
+            /* Mobile Architecture Diagram */
+            .architecture-diagram {
+                padding: 20px;
+                font-size: 0.8em;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .architecture-diagram pre {
+                white-space: pre-wrap;
+                word-wrap: break-word;
+            }
+            
+            /* Mobile Timeline */
+            .timeline-container {
+                margin: 20px 0;
+            }
+            
+            .timeline-phase {
+                margin: 15px 0;
+            }
+            
+            .timeline-header {
+                padding: 15px;
+                font-size: 1.1em;
+            }
+            
+            .timeline-content {
+                padding: 15px;
+            }
+            
+            /* Mobile Tech Stack */
+            .tech-stack {
+                padding: 20px;
+                margin: 20px 0;
+            }
+            
+            /* Mobile Highlight Boxes */
+            .highlight-box {
+                padding: 20px;
+                margin: 20px 0;
+            }
+            
+            .highlight-title {
+                font-size: 1.2em;
+            }
+            
+            /* Mobile Limitations Box */
+            .limitations-box {
+                padding: 15px;
+                margin: 20px 0;
+            }
+            
+            .limitations-title {
+                font-size: 1.1em;
+            }
+            
+            /* Mobile Contact Section */
+            .contact-section {
+                padding: 30px 20px;
+            }
+            
+            .contact-info {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .contact-card {
+                padding: 15px;
+            }
+            
+            /* Mobile Text Adjustments */
+            .subsection-title {
+                font-size: 1.3em;
+                margin: 30px 0 15px 0;
+                padding-left: 15px;
+            }
+            
+            .feature-title {
+                font-size: 1.2em;
+            }
+            
+            /* Mobile Section Spacing */
+            .section {
+                margin-bottom: 40px;
+            }
+            
+            /* Mobile Variant Badge */
+            .variant-badge {
+                font-size: 1em;
+                padding: 8px 15px;
+            }
+        }
+        
+        /* Extra Small Mobile Devices */
+        @media (max-width: 480px) {
+            /* Prevent horizontal overflow */
+            body {
+                overflow-x: hidden;
+            }
+            
+            .container {
+                max-width: 100%;
+                padding: 0 15px;
+            }
+            
+            .main-title {
+                font-size: 2em;
+            }
+            
+            .section-title {
+                font-size: 1.5em;
+            }
+            
+            .content {
+                padding: 20px 15px;
+            }
+            
+            .header {
+                padding: 30px 15px;
+            }
+            
+            .nav-container {
+                padding: 0 15px;
+            }
+            
+            .nav-logo {
+                font-size: 1.2em;
+            }
+            
+            .nav-menu {
+                padding: 15px;
+                gap: 10px;
+            }
+            
+            .budget-table {
+                font-size: 0.8em;
+                min-width: 500px;
+            }
+            
+            .feature-card, .meta-card, .contact-card {
+                padding: 15px;
+            }
+            
+            .highlight-box, .limitations-box {
+                padding: 15px;
+                margin: 15px 0;
+            }
+            
+            .architecture-diagram {
+                padding: 15px;
+                font-size: 0.7em;
+            }
+            
+            .timeline-header {
+                padding: 12px;
+                font-size: 1em;
+            }
+            
+            .timeline-content {
+                padding: 12px;
+            }
+            
+            /* Ensure all content fits within mobile viewport */
+            * {
+                max-width: 100%;
+                box-sizing: border-box;
+            }
+            
+            .feature-card,
+            .meta-card,
+            .contact-card,
+            .highlight-box,
+            .limitations-box {
+                width: 100% !important;
+                max-width: 100% !important;
+                margin: 0 auto;
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+            }
+            
+            .feature-grid {
+                grid-template-columns: 1fr !important;
+                gap: 15px;
+                margin: 15px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navigation">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">Drama Box Clone</a>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="variant1.html" class="active">Variant 1: MVP</a></li>
+                <li><a href="variant2.html">Variant 2: Hybrid</a></li>
+                <li><a href="variant3.html">Variant 3: Native</a></li>
+                <li><a href="variant4.html">Variant 4: Enterprise</a></li>
+            </ul>
+            <button class="mobile-menu-toggle">☰</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <div class="header-content">
+                <h1 class="main-title">DRAMA BOX CLONE</h1>
+                <div class="variant-badge">VARIANT 1</div>
+                <p class="subtitle">Cost-Effective MVP Approach</p>
+                
+                <div class="meta-info">
+                    <div class="meta-card">
+                        <div class="meta-label">Prepared For</div>
+                        <div class="meta-value">Mr. Kunal Shah</div>
+                    </div>
+                    <div class="meta-card">
+                        <div class="meta-label">Document Type</div>
+                        <div class="meta-value">Technical Implementation Plan - Cost-Effective MVP</div>
+                    </div>
+                    <div class="meta-card">
+                        <div class="meta-label">Date</div>
+                        <div class="meta-value">June 28, 2025</div>
+                    </div>
+                    <div class="meta-card">
+                        <div class="meta-label">Version</div>
+                        <div class="meta-value">1.0</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="content">
+            <div class="section">
+                <h2 class="section-title">EXECUTIVE SUMMARY</h2>
+                <p>Variant 1 represents the most budget-friendly approach to launching the Drama Box Clone platform, designed specifically for bootstrapped Indian startups. This Progressive Web Application (PWA) strategy focuses on rapid market validation with minimal initial investment while maintaining core functionality for drama streaming.</p>
+                
+                <div class="highlight-box">
+                    <div class="highlight-title">Key Highlights</div>
+                    <ul class="feature-list">
+                        <li><strong>Total Investment:</strong> ₹12-18 Lakhs</li>
+                        <li><strong>Development Timeline:</strong> 6-8 months</li>
+                        <li><strong>Target Users:</strong> 5,000-15,000 concurrent users</li>
+                        <li><strong>Risk Level:</strong> Low technical risk, moderate market risk</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">TECHNICAL ARCHITECTURE</h2>
+                
+                <div class="subsection-title">Core Technology Stack</div>
+                
+                <div class="tech-stack">
+                    <div class="tech-category">Primary Platform: Progressive Web App (PWA)</div>
+                    <ul class="feature-list">
+                        <li>Framework: React.js 18 with TypeScript</li>
+                        <li>UI Library: Material-UI (MUI) for rapid development</li>
+                        <li>State Management: Context API + useReducer</li>
+                        <li>PWA Features: Workbox for offline functionality</li>
+                        <li>Video Player: React Player with HLS.js</li>
+                        <li>Responsive Design: CSS Grid + Flexbox</li>
+                    </ul>
+                </div>
+                
+                <div class="tech-stack">
+                    <div class="tech-category">Backend Infrastructure</div>
+                    <ul class="feature-list">
+                        <li>Runtime: Node.js with Express.js</li>
+                        <li>Database: MongoDB Atlas (Free Tier → Shared Cluster)</li>
+                        <li>Authentication: Firebase Authentication</li>
+                        <li>File Storage: Firebase Storage (Free Tier)</li>
+                        <li>Hosting: Vercel (Free/Pro Plan)</li>
+                        <li>CDN: Cloudflare (Free Plan)</li>
+                        <li>Video Hosting: Cloudflare Stream (Pay-as-you-go)</li>
+                    </ul>
+                </div>
+                
+                <div class="tech-stack">
+                    <div class="tech-category">Development Tools</div>
+                    <ul class="feature-list">
+                        <li>Version Control: GitHub (Free)</li>
+                        <li>CI/CD: GitHub Actions (Free Tier)</li>
+                        <li>Monitoring: Google Analytics + Firebase Analytics</li>
+                        <li>Error Tracking: Sentry (Free Tier)</li>
+                        <li>Payment: Razorpay (Indian Payment Gateway)</li>
+                    </ul>
+                </div>
+                
+                <div class="architecture-diagram">
+                    <h3>Architecture Diagram</h3>
+                    <pre>
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   PWA Frontend  │    │  Vercel Hosting │    │ MongoDB Atlas   │
+│   (React.js)    │────│   (Node.js)     │────│   (Database)    │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+         │                       │                       │
+         │              ┌─────────────────┐              │
+         └──────────────│ Cloudflare CDN  │──────────────┘
+                        │ (Video Delivery)│
+                        └─────────────────┘
+                                 │
+                        ┌─────────────────┐
+                        │ Firebase Auth   │
+                        │ & Storage       │
+                        └─────────────────┘
+                    </pre>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">FEATURE SET & LIMITATIONS</h2>
+                
+                <div class="subsection-title">Core Features Included</div>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-title">Essential Streaming</div>
+                        <ul class="feature-list">
+                            <li>Basic video streaming with 720p/1080p quality</li>
+                            <li>Simple adaptive streaming (2-3 quality levels)</li>
+                            <li>Basic subtitle support (SRT format)</li>
+                            <li>Continue watching functionality</li>
+                            <li>Simple search and browse</li>
+                        </ul>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-title">User Management</div>
+                        <ul class="feature-list">
+                            <li>Phone/Email registration and login</li>
+                            <li>Basic user profiles (single profile per account)</li>
+                            <li>Simple subscription management</li>
+                            <li>Basic payment integration (Razorpay)</li>
+                        </ul>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-title">Content Management</div>
+                        <ul class="feature-list">
+                            <li>Admin content upload (manual process)</li>
+                            <li>Basic categorization (genre, language)</li>
+                            <li>Simple content metadata management</li>
+                        </ul>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-title">Mobile Experience</div>
+                        <ul class="feature-list">
+                            <li>PWA with mobile-responsive design</li>
+                            <li>Add to home screen functionality</li>
+                            <li>Basic offline content viewing (limited)</li>
+                            <li>Touch-friendly interface</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="subsection-title">Limitations & Trade-offs</div>
+                <div class="limitations-box">
+                    <div class="limitations-title">Scalability Constraints</div>
+                    <ul class="feature-list">
+                        <li>Maximum 15,000 concurrent users</li>
+                        <li>Limited to 1,000 hours of content storage</li>
+                        <li>Basic CDN with limited global reach</li>
+                        <li>No real-time features</li>
+                    </ul>
+                </div>
+                
+                <div class="limitations-box">
+                    <div class="limitations-title">Feature Restrictions</div>
+                    <ul class="feature-list">
+                        <li>No native mobile apps</li>
+                        <li>No advanced AI recommendations</li>
+                        <li>No social features or watch parties</li>
+                        <li>No multi-profile support</li>
+                        <li>Limited offline capabilities</li>
+                        <li>Basic analytics only</li>
+                    </ul>
+                </div>
+                
+                <div class="limitations-box">
+                    <div class="limitations-title">Performance Limitations</div>
+                    <ul class="feature-list">
+                        <li>3-5 second video start times</li>
+                        <li>Basic streaming quality adaptation</li>
+                        <li>Limited device compatibility</li>
+                        <li>Web-based experience only</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">DEVELOPMENT PLAN</h2>
+                
+                <div class="subsection-title">Team Structure (Minimal Team)</div>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-title">Core Development Team (4-5 people)</div>
+                        <ul class="feature-list">
+                            <li>Full-Stack Lead Developer: 1 person × 6 months</li>
+                            <li>Frontend Developer (React): 1 person × 5 months</li>
+                            <li>Backend Developer (Node.js): 1 person × 5 months</li>
+                            <li>UI/UX Designer: 1 person × 3 months</li>
+                            <li>QA Tester: 1 person × 2 months (part-time)</li>
+                        </ul>
+                        <p><strong>Total Effort: 21 person-months</strong></p>
+                    </div>
+                </div>
+                
+                <div class="subsection-title">Phase-wise Development</div>
+                <div class="timeline-container">
+                    <div class="timeline-phase">
+                        <div class="timeline-header">Phase 1: Foundation (Months 1-2)</div>
+                        <div class="timeline-content">
+                            <ul class="feature-list">
+                                <li>Week 1-2: Project setup, team onboarding</li>
+                                <li>Week 3-4: Basic PWA structure, authentication</li>
+                                <li>Week 5-6: Database design, basic API endpoints</li>
+                                <li>Week 7-8: Video upload and basic streaming</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-phase">
+                        <div class="timeline-header">Phase 2: Core Features (Months 3-4)</div>
+                        <div class="timeline-content">
+                            <ul class="feature-list">
+                                <li>Week 9-10: User registration and profile management</li>
+                                <li>Week 11-12: Content browsing and search</li>
+                                <li>Week 13-14: Video player integration and testing</li>
+                                <li>Week 15-16: Payment integration and subscriptions</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-phase">
+                        <div class="timeline-header">Phase 3: Polish & Launch (Months 5-6)</div>
+                        <div class="timeline-content">
+                            <ul class="feature-list">
+                                <li>Week 17-18: Admin panel for content management</li>
+                                <li>Week 19-20: Performance optimization and PWA features</li>
+                                <li>Week 21-22: Testing, bug fixes, and security</li>
+                                <li>Week 23-24: Deployment and launch preparation</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">BUDGET BREAKDOWN (INR)</h2>
+                
+                <div class="subsection-title">Development Costs</div>
+                <div class="table-container">
+                    <table class="budget-table">
+                    <thead>
+                        <tr>
+                            <th>Human Resources (6 months)</th>
+                            <th>Duration</th>
+                            <th>Cost per Month</th>
+                            <th>Total Cost</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td data-label="Human Resources (6 months)">Full-Stack Lead Developer</td>
+                            <td data-label="Duration">6 months</td>
+                            <td data-label="Cost per Month">₹60,000</td>
+                            <td data-label="Total Cost">₹3,60,000</td>
+                        </tr>
+                        <tr>
+                            <td data-label="Human Resources (6 months)">Frontend Developer</td>
+                            <td data-label="Duration">5 months</td>
+                            <td data-label="Cost per Month">₹45,000</td>
+                            <td data-label="Total Cost">₹2,25,000</td>
+                        </tr>
+                        <tr>
+                            <td data-label="Human Resources (6 months)">Backend Developer</td>
+                            <td data-label="Duration">5 months</td>
+                            <td data-label="Cost per Month">₹45,000</td>
+                            <td data-label="Total Cost">₹2,25,000</td>
+                        </tr>
+                        <tr>
+                            <td data-label="Human Resources (6 months)">UI/UX Designer</td>
+                            <td data-label="Duration">3 months</td>
+                            <td data-label="Cost per Month">₹35,000</td>
+                            <td data-label="Total Cost">₹1,05,000</td>
+                        </tr>
+                        <tr>
+                            <td data-label="Human Resources (6 months)">QA Tester (Part-time)</td>
+                            <td data-label="Duration">2 months</td>
+                            <td data-label="Cost per Month">₹15,000</td>
+                            <td data-label="Total Cost">₹30,000</td>
+                        </tr>
+                        <tr style="background: #e74c3c; color: white; font-weight: bold;">
+                            <td colspan="3">Total Development Cost</td>
+                            <td>₹9,45,000</td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+                
+                <div class="subsection-title">Infrastructure & Tools (Year 1)</div>
+                <div class="table-container">
+                    <table class="budget-table">
+                    <thead>
+                        <tr>
+                            <th>Service</th>
+                            <th>Monthly Cost</th>
+                            <th>Annual Cost</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td data-label="Service">Vercel Pro Plan</td>
+                            <td data-label="Monthly Cost">₹1,500</td>
+                            <td data-label="Annual Cost">₹18,000</td>
+                        </tr>
+                        <tr>
+                            <td data-label="Service">MongoDB Atlas Shared</td>
+                            <td data-label="Monthly Cost">₹2,000</td>
+                            <td data-label="Annual Cost">₹24,000</td>
+                        </tr>
+                        <tr>
+                            <td data-label="Service">Cloudflare Stream</td>
+                            <td data-label="Monthly Cost">-</td>
+                            <td data-label="Annual Cost">₹25,000</td>
+                        </tr>
+                        <tr>
+                            <td data-label="Service">Firebase (Auth + Storage)</td>
+                            <td data-label="Monthly Cost">-</td>
+                            <td data-label="Annual Cost">₹15,000</td>
+                        </tr>
+                        <tr>
+                            <td data-label="Service">Domain & SSL</td>
+                            <td data-label="Monthly Cost">-</td>
+                            <td data-label="Annual Cost">₹5,000</td>
+                        </tr>
+                        <tr>
+                            <td data-label="Service">Development Tools & Services</td>
+                            <td data-label="Monthly Cost">-</td>
+                            <td data-label="Annual Cost">₹10,000</td>
+                        </tr>
+                        <tr style="background: #e74c3c; color: white; font-weight: bold;">
+                            <td data-label="Service" colspan="2">Total Infrastructure</td>
+                            <td data-label="Annual Cost">₹97,000</td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+                
+                <div class="subsection-title">Additional Costs</div>
+                <div class="table-container">
+                    <table class="budget-table">
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Cost</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td data-label="Category">Legal & Compliance</td>
+                            <td data-label="Cost">₹50,000</td>
+                        </tr>
+                        <tr>
+                            <td data-label="Category">Marketing & Launch</td>
+                            <td data-label="Cost">₹75,000</td>
+                        </tr>
+                        <tr>
+                            <td data-label="Category">Contingency (10%)</td>
+                            <td data-label="Cost">₹1,16,700</td>
+                        </tr>
+                        <tr style="background: #e74c3c; color: white; font-weight: bold;">
+                            <td data-label="Category">Total Additional</td>
+                            <td data-label="Cost">₹2,41,700</td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+                
+                <div class="highlight-box">
+                    <div class="highlight-title">TOTAL PROJECT BUDGET: ₹12,83,700 (~₹13 Lakhs)</div>
+                </div>
+                
+                <div class="subsection-title">Monthly Operational Costs</div>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-title">Infrastructure Scaling</div>
+                        <ul class="feature-list">
+                            <li>Vercel Pro: ₹1,500</li>
+                            <li>MongoDB Atlas: ₹2,000-₹5,000 (usage based)</li>
+                            <li>Cloudflare Stream: ₹2,000-₹8,000 (content dependent)</li>
+                            <li>Firebase Services: ₹1,000-₹3,000</li>
+                        </ul>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-title">Maintenance Team</div>
+                        <ul class="feature-list">
+                            <li>Part-time Developer: ₹25,000</li>
+                            <li>Customer Support: ₹15,000</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="highlight-box">
+                    <div class="highlight-title">Monthly Operational: ₹46,500 - ₹62,500</div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">SCALING STRATEGY</h2>
+                
+                <div class="subsection-title">Growth Path (User Milestones)</div>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-title">0-5,000 Users (Months 1-6)</div>
+                        <ul class="feature-list">
+                            <li>Free tier services sufficient</li>
+                            <li>Basic monitoring and support</li>
+                            <li>Focus on user feedback and core features</li>
+                        </ul>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-title">5,000-15,000 Users (Months 7-12)</div>
+                        <ul class="feature-list">
+                            <li>Upgrade to paid infrastructure tiers</li>
+                            <li>Add customer support systems</li>
+                            <li>Implement basic analytics</li>
+                        </ul>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-title">15,000+ Users (Year 2+)</div>
+                        <ul class="feature-list">
+                            <li><strong>Critical Decision Point:</strong> Migrate to Variant 2 or 3</li>
+                            <li>Current architecture reaches limitations</li>
+                            <li>Requires significant re-architecture for further growth</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="subsection-title">Migration Strategy</div>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-title">To Variant 2 (Hybrid)</div>
+                        <ul class="feature-list">
+                            <li>Gradual migration to React Native</li>
+                            <li>Enhanced backend services</li>
+                            <li>Estimated migration cost: ₹20-25 Lakhs</li>
+                        </ul>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-title">To Variant 3 (Native)</div>
+                        <ul class="feature-list">
+                            <li>Complete platform rebuild</li>
+                            <li>Native app development</li>
+                            <li>Estimated migration cost: ₹1.5-2 Crores</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">RISK ASSESSMENT</h2>
+                
+                <div class="subsection-title">Technical Risks</div>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-title">PWA Limitations</div>
+                        <p><strong>Risk:</strong> Limited mobile app store presence</p>
+                        <p><strong>Mitigation:</strong> Focus on web SEO and direct user acquisition</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-title">Scalability Constraints</div>
+                        <p><strong>Risk:</strong> Rapid user growth exceeding capacity</p>
+                        <p><strong>Mitigation:</strong> Real-time monitoring and planned migration path</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-title">Performance Issues</div>
+                        <p><strong>Risk:</strong> Slow loading on poor networks</p>
+                        <p><strong>Mitigation:</strong> Aggressive caching and optimization</p>
+                    </div>
+                </div>
+                
+                <div class="subsection-title">Business Risks</div>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-title">Market Positioning</div>
+                        <p><strong>Risk:</strong> Limited features vs. competitors</p>
+                        <p><strong>Mitigation:</strong> Focus on niche drama content and regional markets</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-title">User Experience</div>
+                        <p><strong>Risk:</strong> Web-only experience may disappoint mobile users</p>
+                        <p><strong>Mitigation:</strong> Excellent PWA implementation and education</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">SUCCESS METRICS</h2>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-title">Technical KPIs</div>
+                        <ul class="feature-list">
+                            <li>PWA performance score: >90</li>
+                            <li>Video start time: <5 seconds</li>
+                            <li>Uptime: >99.5%</li>
+                            <li>Mobile responsiveness score: >95</li>
+                        </ul>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-title">Business KPIs</div>
+                        <ul class="feature-list">
+                            <li>User acquisition: 1,000 users in first 3 months</li>
+                            <li>Retention rate: >60% after 30 days</li>
+                            <li>Content engagement: >30 minutes average session</li>
+                            <li>Revenue: ₹50,000/month by month 6</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">RECOMMENDATION</h2>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-title">Best Suited For</div>
+                        <ul class="feature-list">
+                            <li>Bootstrapped startups with limited initial capital</li>
+                            <li>Market validation and MVP testing</li>
+                            <li>Rapid prototype development</li>
+                            <li>Learning and iteration before major investment</li>
+                        </ul>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-title">Not Recommended If</div>
+                        <ul class="feature-list">
+                            <li>Planning for immediate large-scale growth</li>
+                            <li>Requiring native mobile app experience</li>
+                            <li>Competing directly with major streaming platforms</li>
+                            <li>Targeting tech-savvy users expecting advanced features</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="highlight-box">
+                    <div class="highlight-title">Next Steps</div>
+                    <ul class="feature-list">
+                        <li>Validate market demand with simple landing page</li>
+                        <li>Secure initial content partnerships</li>
+                        <li>Assemble minimal viable development team</li>
+                        <li>Begin with 3-month MVP development sprint</li>
+                        <li>Plan migration strategy for growth scenarios</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="contact-section">
+            <h2 class="contact-title">Contact Information</h2>
+            <div class="contact-info">
+                <div class="contact-card">
+                    <div class="contact-label">Contact Name</div>
+                    <div class="contact-value">Shreeyanshu</div>
+                </div>
+                <div class="contact-card">
+                    <div class="contact-label">Contact Number</div>
+                    <div class="contact-value">9904218241</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    // Mobile menu toggle functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const mobileToggle = document.querySelector('.mobile-menu-toggle');
+        const navMenu = document.querySelector('.nav-menu');
+        
+        if (mobileToggle && navMenu) {
+            mobileToggle.addEventListener('click', function() {
+                navMenu.classList.toggle('active');
+                
+                // Update ARIA attributes for accessibility
+                const isOpen = navMenu.classList.contains('active');
+                mobileToggle.setAttribute('aria-expanded', isOpen);
+                mobileToggle.innerHTML = isOpen ? '✕' : '☰';
+            });
+            
+            // Close menu when clicking outside
+            document.addEventListener('click', function(event) {
+                if (!event.target.closest('.navigation')) {
+                    navMenu.classList.remove('active');
+                    mobileToggle.setAttribute('aria-expanded', 'false');
+                    mobileToggle.innerHTML = '☰';
+                }
+            });
+            
+            // Close menu when pressing Escape key
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape' && navMenu.classList.contains('active')) {
+                    navMenu.classList.remove('active');
+                    mobileToggle.setAttribute('aria-expanded', 'false');
+                    mobileToggle.innerHTML = '☰';
+                    mobileToggle.focus();
+                }
+            });
+        }
+    });
+</script>
+</html>

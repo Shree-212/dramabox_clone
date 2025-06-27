@@ -1,0 +1,1569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drama Box Clone - Variant 4: Enterprise Self-Hosted Approach</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #ffffff;
+            min-height: 100vh;
+            box-shadow: 0 0 50px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 60px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="pattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="2" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect x="0" y="0" width="100" height="100" fill="url(%23pattern)"/></svg>') repeat;
+            opacity: 0.1;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(-20px, -20px) rotate(180deg); }
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .main-title {
+            font-size: 3.2em;
+            font-weight: 800;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            letter-spacing: -0.02em;
+        }
+        
+        .variant-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-size: 0.9em;
+            font-weight: 600;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        
+        .subtitle {
+            font-size: 1.4em;
+            font-weight: 400;
+            opacity: 0.95;
+            margin-bottom: 30px;
+        }
+        
+        .meta-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+        }
+        
+        .meta-card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .meta-label {
+            font-size: 0.9em;
+            opacity: 0.8;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .meta-value {
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+
+        .header h1 {
+            font-size: 2.8em;
+            font-weight: 700;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .header .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .header .metadata {
+            font-size: 0.95em;
+            opacity: 0.8;
+            position: relative;
+            z-index: 2;
+        }
+
+        .content {
+            padding: 50px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 30px;
+            border-left: 5px solid #1e3c72;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+
+        .section h2 {
+            color: #1e3c72;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e9ecef;
+            display: flex;
+            align-items: center;
+        }
+
+        .section h2::before {
+            content: "▶";
+            margin-right: 10px;
+            color: #2a5298;
+        }
+
+        .section h3 {
+            color: #2a5298;
+            font-size: 1.4em;
+            margin: 25px 0 15px 0;
+            font-weight: 600;
+        }
+
+        .section h4 {
+            color: #495057;
+            font-size: 1.2em;
+            margin: 20px 0 10px 0;
+            font-weight: 600;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+            border: 1px solid #2196F3;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 20px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .highlight-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, #2196F3, #9C27B0);
+        }
+
+        .highlight-box h4 {
+            color: #1565C0;
+            margin-top: 0;
+        }
+
+        .tech-stack {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .tech-item {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .tech-item:hover {
+            border-color: #1e3c72;
+            box-shadow: 0 5px 15px rgba(30, 60, 114, 0.1);
+        }
+
+        .budget-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            min-width: 800px; /* Minimum width for enterprise table content */
+        }
+        
+        /* Table Container for Horizontal Scroll */
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .table-container .budget-table {
+            margin: 0; /* Remove margin when inside container */
+        }
+
+        .budget-table th {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .budget-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .budget-table tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .timeline {
+            position: relative;
+            margin: 30px 0;
+        }
+
+        .timeline-item {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            margin-left: 30px;
+            position: relative;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -15px;
+            top: 50%;
+            width: 12px;
+            height: 12px;
+            background: #1e3c72;
+            border-radius: 50%;
+            transform: translateY(-50%);
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .metric-card .value {
+            font-size: 2em;
+            font-weight: 700;
+            color: #1e3c72;
+            margin-bottom: 5px;
+        }
+
+        .metric-card .label {
+            color: #6c757d;
+            font-size: 0.9em;
+        }
+
+        .risk-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .risk-item {
+            background: white;
+            border-left: 4px solid #dc3545;
+            border-radius: 0 8px 8px 0;
+            padding: 20px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .mitigation {
+            background: white;
+            border-left: 4px solid #28a745;
+            border-radius: 0 8px 8px 0;
+            padding: 20px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .advantages-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .advantages-list li {
+            background: white;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #28a745;
+            transition: all 0.3s ease;
+        }
+
+        .advantages-list li:hover {
+            transform: translateX(10px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .advantages-list li::before {
+            content: "✓";
+            color: #28a745;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .contact-info {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        .contact-info h3 {
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .contact-details {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .contact-item i {
+            font-size: 1.2em;
+        }
+
+        pre {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            padding: 15px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+
+        .phase-banner {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 20px 0;
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                padding: 20px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .contact-details {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            
+            .container {
+                box-shadow: none;
+            }
+            
+            .section:hover {
+                transform: none;
+                box-shadow: none;
+            }
+        }
+        
+        /* Navigation Styles */
+        .navigation {
+            background: rgba(0,0,0,0.9);
+            padding: 15px 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 40px;
+        }
+        
+        .nav-logo {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #667eea;
+            text-decoration: none;
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            gap: 30px;
+        }
+        
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-menu a:hover,
+        .nav-menu a.active {
+            color: #667eea;
+        }
+        
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #667eea;
+            transition: width 0.3s ease;
+        }
+        
+        .nav-menu a:hover::after,
+        .nav-menu a.active::after {
+            width: 100%;
+        }
+        
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5em;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+        
+        .mobile-menu-toggle:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+        
+        .mobile-menu-toggle:focus {
+            outline: 2px solid #667eea;
+            outline-offset: 2px;
+        }
+        
+        body {
+            padding-top: 80px;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-container {
+                padding: 0 20px;
+            }
+            
+            .nav-menu {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: rgba(0,0,0,0.95);
+                flex-direction: column;
+                padding: 20px;
+                gap: 15px;
+            }
+            
+            .nav-menu.active {
+                display: flex;
+            }
+            
+            .mobile-menu-toggle {
+                display: block;
+            }
+            
+            /* Mobile Table Styles */
+            .table-container {
+                margin: 20px -20px; /* Extend to screen edges on mobile */
+                border-radius: 0;
+                box-shadow: none;
+            }
+            
+            .budget-table {
+                font-size: 0.85em;
+                border-radius: 0;
+                margin: 0;
+                min-width: 800px; /* Wider for enterprise content */
+            }
+            
+            .budget-table th,
+            .budget-table td {
+                padding: 10px 8px;
+                min-width: 120px;
+            }
+            
+            .budget-table thead,
+            .budget-table tbody {
+                display: table-header-group;
+            }
+            
+            .budget-table tr {
+                display: table-row;
+            }
+            
+            .budget-table th,
+            .budget-table td {
+                display: table-cell;
+                padding: 10px 8px;
+                white-space: nowrap;
+                min-width: 100px;
+            }
+            
+            .budget-table th:first-child,
+            .budget-table td:first-child {
+                min-width: 150px;
+                position: sticky;
+                left: 0;
+                background: white;
+                box-shadow: 2px 0 4px rgba(0,0,0,0.1);
+                z-index: 1;
+            }
+            
+            .budget-table th {
+                background: #1e3c72 !important;
+                color: white !important;
+            }
+            
+            .budget-table th:first-child {
+                background: #1e3c72 !important;
+            }
+            
+            /* Mobile Feature Grid */
+            .tech-grid, .metrics-grid, .risk-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                margin: 20px 0;
+            }
+            
+            .tech-item, .metric-card, .risk-item {
+                padding: 20px;
+                width: 100%;
+                box-sizing: border-box;
+                overflow-wrap: break-word;
+            }
+            
+            /* Mobile Meta Info */
+            .meta-info {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .meta-card {
+                padding: 15px;
+            }
+            
+            /* Mobile Architecture Diagram */
+            .architecture-diagram {
+                padding: 20px;
+                font-size: 0.7em;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .architecture-diagram pre {
+                white-space: pre-wrap;
+                word-wrap: break-word;
+            }
+            
+            /* Mobile Timeline */
+            .timeline {
+                margin: 20px 0;
+            }
+            
+            .timeline-item {
+                margin: 15px 0;
+                padding: 15px;
+            }
+            
+            /* Mobile Tech Stack */
+            .tech-stack {
+                padding: 20px;
+                margin: 20px 0;
+            }
+            
+            /* Mobile Highlight Boxes */
+            .highlight-box {
+                padding: 20px;
+                margin: 20px 0;
+            }
+            
+            .highlight-box h4 {
+                font-size: 1.2em;
+            }
+            
+            /* Mobile Contact Section */
+            .contact-info {
+                padding: 30px 20px;
+            }
+            
+            .contact-details {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .contact-item {
+                padding: 15px;
+            }
+            
+            /* Mobile Text Adjustments */
+            .section h2 {
+                font-size: 1.5em;
+            }
+            
+            .section h3 {
+                font-size: 1.3em;
+                margin: 20px 0 10px 0;
+            }
+            
+            .section h4 {
+                font-size: 1.1em;
+                margin: 15px 0 8px 0;
+            }
+            
+            /* Mobile Section Spacing */
+            .section {
+                margin-bottom: 30px;
+                padding: 20px;
+            }
+            
+            /* Mobile Variant Badge */
+            .variant-badge {
+                font-size: 1em;
+                padding: 8px 15px;
+            }
+            
+            /* Mobile Phase Banner */
+            .phase-banner {
+                padding: 15px;
+                margin: 15px 0;
+            }
+            
+            /* Mobile Advantages List */
+            .advantages-list {
+                padding-left: 20px;
+            }
+            
+            .advantages-list li {
+                padding: 5px 0;
+            }
+            
+            /* Mobile Code Blocks */
+            .code-block {
+                padding: 15px;
+                font-size: 0.8em;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            pre {
+                font-size: 0.7em;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                white-space: pre-wrap;
+                word-wrap: break-word;
+            }
+            
+            /* Ensure all content fits within mobile viewport */
+            * {
+                max-width: 100%;
+                box-sizing: border-box;
+            }
+            
+            .tech-item,
+            .risk-item,
+            .mitigation,
+            .highlight-box,
+            .contact-item {
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+            }
+        }
+        
+        /* Extra Small Mobile Devices */
+        @media (max-width: 480px) {
+            /* Prevent horizontal overflow */
+            body {
+                overflow-x: hidden;
+            }
+            
+            .container {
+                max-width: 100%;
+                padding: 0 15px;
+            }
+            
+            .main-title {
+                font-size: 2em;
+            }
+            
+            .section h2 {
+                font-size: 1.3em;
+            }
+            
+            .content {
+                padding: 20px 15px;
+            }
+            
+            .header {
+                padding: 30px 15px;
+            }
+            
+            .nav-container {
+                padding: 0 15px;
+            }
+            
+            .nav-logo {
+                font-size: 1.2em;
+            }
+            
+            .nav-menu {
+                padding: 15px;
+                gap: 10px;
+            }
+            
+            .budget-table {
+                font-size: 0.75em;
+                min-width: 500px;
+            }
+            
+            .tech-item, .metric-card, .risk-item, .meta-card, .contact-item {
+                padding: 15px;
+                width: 100% !important;
+                max-width: 100% !important;
+                margin: 0 auto;
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+            }
+            
+            .tech-stack, .metrics-grid, .risk-grid {
+                grid-template-columns: 1fr !important;
+                gap: 15px;
+                margin: 15px 0;
+            }
+            
+            .highlight-box {
+                padding: 15px;
+                margin: 15px 0;
+            }
+            
+            .section {
+                padding: 15px;
+                margin-bottom: 25px;
+            }
+            
+            .timeline-item {
+                padding: 12px;
+                margin: 12px 0;
+            }
+            
+            .phase-banner {
+                padding: 12px;
+                margin: 12px 0;
+            }
+            
+            .code-block {
+                padding: 12px;
+                font-size: 0.7em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navigation">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">Drama Box Clone</a>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="variant1.html">Variant 1: MVP</a></li>
+                <li><a href="variant2.html">Variant 2: Hybrid</a></li>
+                <li><a href="variant3.html">Variant 3: Native</a></li>
+                <li><a href="variant4.html" class="active">Variant 4: Enterprise</a></li>
+            </ul>
+            <button class="mobile-menu-toggle">☰</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <div class="header-content">
+                <h1 class="main-title">DRAMA BOX CLONE</h1>
+                <div class="variant-badge">VARIANT 4</div>
+                <p class="subtitle">Enterprise Self-Hosted Approach</p>
+                
+                <div class="meta-info">
+                    <div class="meta-card">
+                        <div class="meta-label">Prepared For</div>
+                        <div class="meta-value">Mr. Kunal Shah</div>
+                    </div>
+                    <div class="meta-card">
+                        <div class="meta-label">Document Type</div>
+                        <div class="meta-value">Technical Implementation Plan - Complete Enterprise Control</div>
+                    </div>
+                    <div class="meta-card">
+                        <div class="meta-label">Date</div>
+                        <div class="meta-value">June 28, 2025</div>
+                    </div>
+                    <div class="meta-card">
+                        <div class="meta-label">Version</div>
+                        <div class="meta-value">1.0</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="section">
+                <h2>Executive Summary</h2>
+                <p>Variant 4 represents the ultimate enterprise solution with complete technological independence. This approach builds everything from scratch including custom CDN infrastructure, designed for startups with substantial funding and long-term vision for complete platform control. Optimized for Indian market with focus on data sovereignty and unlimited customization.</p>
+                
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="value">₹3.5-5 Cr</div>
+                        <div class="label">Total Investment</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="value">18-30</div>
+                        <div class="label">Months Timeline</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="value">Unlimited</div>
+                        <div class="label">Scalability</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="value">High</div>
+                        <div class="label">Risk Level</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Technical Architecture</h2>
+                
+                <h3>Core Technology Stack</h3>
+                
+                <div class="tech-stack">
+                    <div class="tech-item">
+                        <h4>Frontend Development</h4>
+                        <strong>Mobile Applications:</strong>
+                        <ul>
+                            <li>iOS: Swift with SwiftUI, Combine</li>
+                            <li>Android: Kotlin with Jetpack Compose</li>
+                            <li>Architecture: Clean Architecture with MVVM</li>
+                        </ul>
+                        
+                        <strong>Web Applications:</strong>
+                        <ul>
+                            <li>Frontend: React.js with TypeScript</li>
+                            <li>State Management: Redux Toolkit</li>
+                            <li>Build Tool: Vite for optimized builds</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="tech-item">
+                        <h4>Backend Infrastructure</h4>
+                        <strong>Microservices Architecture:</strong>
+                        <ul>
+                            <li>Core Services: Go for high-performance APIs</li>
+                            <li>Real-time Services: Rust for ultra-low latency</li>
+                            <li>Data Processing: Python with FastAPI</li>
+                            <li>Message Queue: Custom Kafka implementation</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="tech-item">
+                        <h4>Database Systems</h4>
+                        <ul>
+                            <li>Primary DB: Self-hosted PostgreSQL cluster</li>
+                            <li>Cache Layer: Redis Cluster with custom sharding</li>
+                            <li>Search Engine: Self-hosted Elasticsearch</li>
+                            <li>Analytics DB: ClickHouse for real-time analytics</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="tech-item">
+                        <h4>Custom CDN & Streaming</h4>
+                        <ul>
+                            <li>Custom-built CDN with global edge servers</li>
+                            <li>FFmpeg-based transcoding pipeline</li>
+                            <li>Custom streaming protocol optimization</li>
+                            <li>Advanced DRM with hardware-level protection</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <h4>Architecture Overview</h4>
+                    <div class="code-block">
+┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐
+│   Native iOS    │  │ Native Android  │  │  Web React App  │  │  Smart TV Apps  │
+│   (Swift)       │  │   (Kotlin)      │  │ (TypeScript)    │  │ (Platform Specific)│
+└─────────────────┘  └─────────────────┘  └─────────────────┘  └─────────────────┘
+         │                     │                     │                     │
+         └─────────────────────┼─────────────────────┼─────────────────────┘
+                               │                     │
+                    ┌─────────────────┐             │
+                    │ Custom API      │             │
+                    │ Gateway (Go)    │─────────────┘
+                    └─────────────────┘
+                               │
+         ┌─────────────────────┼─────────────────────┐
+         │                     │                     │
+┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐
+│  Microservices  │  │   Database      │  │   Custom CDN    │
+│   Cluster       │  │   Cluster       │  │   Network       │
+│ (Go/Rust/Python)│  │ (PostgreSQL/    │  │ (Global Edge    │
+│                 │  │  Redis/ES)      │  │  Servers)       │
+└─────────────────┘  └─────────────────┘  └─────────────────┘
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Feature Set & Capabilities</h2>
+                
+                <h3>Ultimate Enterprise Features</h3>
+                
+                <div class="highlight-box">
+                    <h4>Advanced Streaming Technology</h4>
+                    <ul>
+                        <li>Custom video codec optimization for drama content</li>
+                        <li>AI-powered real-time video enhancement</li>
+                        <li>Ultra-low latency streaming (&lt;100ms globally)</li>
+                        <li>8K video support with custom compression</li>
+                        <li>Advanced HDR and Dolby Vision support</li>
+                        <li>Custom subtitle rendering with advanced styling</li>
+                    </ul>
+                </div>
+                
+                <div class="highlight-box">
+                    <h4>Complete Platform Control</h4>
+                    <ul>
+                        <li>Custom user authentication with biometric support</li>
+                        <li>Advanced fraud detection and prevention</li>
+                        <li>Real-time content moderation with AI</li>
+                        <li>Custom analytics with unlimited data retention</li>
+                        <li>Dynamic content pricing and monetization</li>
+                        <li>Advanced A/B testing framework</li>
+                    </ul>
+                </div>
+
+                <h3>Unlimited Scalability Features</h3>
+                <ul class="advantages-list">
+                    <li>Unlimited horizontal scaling</li>
+                    <li>Custom load balancing algorithms</li>
+                    <li>Zero-downtime deployments</li>
+                    <li>Multi-region active-active setup</li>
+                    <li>Custom disaster recovery protocols</li>
+                    <li>Advanced monitoring with predictive alerts</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <h2>Development Plan</h2>
+                
+                <h3>Team Structure (Large-Scale Enterprise Team)</h3>
+                
+                <div class="table-container">
+                    <table class="budget-table">
+                    <thead>
+                        <tr>
+                            <th>Role Category</th>
+                            <th>Team Size</th>
+                            <th>Duration</th>
+                            <th>Cost (INR)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Technical Leadership</td>
+                            <td>5 people</td>
+                            <td>15-24 months</td>
+                            <td>₹1,89,50,000</td>
+                        </tr>
+                        <tr>
+                            <td>Platform Development</td>
+                            <td>12 people</td>
+                            <td>10-18 months</td>
+                            <td>₹3,21,90,000</td>
+                        </tr>
+                        <tr>
+                            <td>Backend & Infrastructure</td>
+                            <td>10 people</td>
+                            <td>15-20 months</td>
+                            <td>₹3,33,00,000</td>
+                        </tr>
+                        <tr>
+                            <td>Specialized Development</td>
+                            <td>8 people</td>
+                            <td>12-18 months</td>
+                            <td>₹1,80,00,000</td>
+                        </tr>
+                        <tr>
+                            <td>Quality & Testing</td>
+                            <td>6 people</td>
+                            <td>10-16 months</td>
+                            <td>₹97,00,000</td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+                
+                <div class="phase-banner">
+                    Total Team Cost: ₹11,85,40,000
+                </div>
+
+                <h3>Comprehensive Development Timeline</h3>
+                
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h4>Phase 1: Infrastructure Foundation (Months 1-6)</h4>
+                        <ul>
+                            <li>Team assembly and comprehensive training</li>
+                            <li>Data center setup and server procurement</li>
+                            <li>Network infrastructure and security setup</li>
+                            <li>Video processing pipeline development</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <h4>Phase 2: Platform Development (Months 7-12)</h4>
+                        <ul>
+                            <li>Native mobile application development</li>
+                            <li>Web application and backend services</li>
+                            <li>Smart TV and desktop applications</li>
+                            <li>Cross-platform synchronization</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <h4>Phase 3: Advanced Features (Months 13-20)</h4>
+                        <ul>
+                            <li>AI & ML recommendation systems</li>
+                            <li>Content management and creator tools</li>
+                            <li>Monetization and payment systems</li>
+                            <li>Enterprise features and admin panel</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <h4>Phase 4: Global Infrastructure (Months 21-24)</h4>
+                        <ul>
+                            <li>Global edge server deployment</li>
+                            <li>Performance optimization and scaling</li>
+                            <li>Security audits and penetration testing</li>
+                            <li>Production deployment and go-live</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <h4>Phase 5: Post-Launch Enhancement (Months 25-30)</h4>
+                        <ul>
+                            <li>Performance monitoring and optimization</li>
+                            <li>International market deployment</li>
+                            <li>Enterprise client onboarding</li>
+                            <li>Future roadmap planning</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Budget Breakdown (INR) - Optimized Enterprise Solution</h2>
+                
+                <h3>Development Costs</h3>
+                
+                <div class="table-container">
+                    <table class="budget-table">
+                    <thead>
+                        <tr>
+                            <th>Cost Category</th>
+                            <th>Amount (INR)</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Total Team Salary</td>
+                            <td>₹11,85,40,000</td>
+                            <td>24-30 months development</td>
+                        </tr>
+                        <tr>
+                            <td>Training & Certifications</td>
+                            <td>₹25,00,000</td>
+                            <td>Advanced skill development</td>
+                        </tr>
+                        <tr>
+                            <td>Development Hardware</td>
+                            <td>₹35,00,000</td>
+                            <td>High-end development setup</td>
+                        </tr>
+                        <tr>
+                            <td>Enterprise Software Licenses</td>
+                            <td>₹20,00,000</td>
+                            <td>Professional tools and software</td>
+                        </tr>
+                        <tr>
+                            <td>Office Infrastructure</td>
+                            <td>₹30,00,000</td>
+                            <td>Office setup and facilities</td>
+                        </tr>
+                        <tr>
+                            <td>Research & Development</td>
+                            <td>₹15,00,000</td>
+                            <td>Innovation and R&D activities</td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+                
+                <div class="phase-banner">
+                    Total Development: ₹13,10,40,000
+                </div>
+
+                <h3>Infrastructure & Hardware</h3>
+                
+                <div class="table-container">
+                    <table class="budget-table">
+                    <thead>
+                        <tr>
+                            <th>Infrastructure Component</th>
+                            <th>Cost (INR)</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Data Center Setup</td>
+                            <td>₹1,50,00,000</td>
+                            <td>Primary DC with servers and storage</td>
+                        </tr>
+                        <tr>
+                            <td>Edge Server Network</td>
+                            <td>₹2,00,00,000</td>
+                            <td>30 locations globally</td>
+                        </tr>
+                        <tr>
+                            <td>Network Connectivity</td>
+                            <td>₹40,00,000</td>
+                            <td>High-speed internet and networking</td>
+                        </tr>
+                        <tr>
+                            <td>Cloud & Backup</td>
+                            <td>₹45,00,000</td>
+                            <td>Disaster recovery and backup systems</td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+                
+                <div class="phase-banner">
+                    Total Infrastructure: ₹3,35,00,000
+                </div>
+
+                <h3>Phased Investment Strategy</h3>
+                
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="value">₹3.5 Cr</div>
+                        <div class="label">Phase 1 Investment (MVP)</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="value">₹8 Cr</div>
+                        <div class="label">Phase 2 Investment (Scale)</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="value">₹8 Cr</div>
+                        <div class="label">Phase 3 Investment (Global)</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="value">₹1.65 Cr</div>
+                        <div class="label">Monthly Operational Cost</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Competitive Advantages</h2>
+                
+                <h3>Ultimate Control Benefits</h3>
+                
+                <div class="highlight-box">
+                    <h4>Technical Sovereignty</h4>
+                    <ul class="advantages-list">
+                        <li>Complete control over technology stack</li>
+                        <li>Custom optimization for Indian market</li>
+                        <li>No vendor lock-in or dependency risks</li>
+                        <li>Unlimited customization capabilities</li>
+                        <li>Proprietary technology advantages</li>
+                    </ul>
+                </div>
+                
+                <div class="highlight-box">
+                    <h4>Business Independence</h4>
+                    <ul class="advantages-list">
+                        <li>Complete data ownership and control</li>
+                        <li>Custom monetization strategies</li>
+                        <li>White-label and B2B opportunities</li>
+                        <li>Intellectual property development</li>
+                        <li>Technology licensing potential</li>
+                    </ul>
+                </div>
+                
+                <div class="highlight-box">
+                    <h4>Market Leadership</h4>
+                    <ul class="advantages-list">
+                        <li>Superior performance and features</li>
+                        <li>Unique capabilities not available elsewhere</li>
+                        <li>First-mover advantage in custom solutions</li>
+                        <li>Enterprise-grade security and compliance</li>
+                        <li>Unlimited scaling without external constraints</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Risk Assessment & Mitigation</h2>
+                
+                <h3>High-Priority Risks</h3>
+                
+                <div class="risk-grid">
+                    <div class="risk-item">
+                        <h4>Technical Complexity</h4>
+                        <p><strong>Risk:</strong> Extremely complex development and maintenance</p>
+                    </div>
+                    <div class="mitigation">
+                        <h4>Mitigation Strategy</h4>
+                        <p>Phased approach, expert consultations, extensive documentation</p>
+                    </div>
+                    
+                    <div class="risk-item">
+                        <h4>High Investment</h4>
+                        <p><strong>Risk:</strong> Substantial upfront capital requirement</p>
+                    </div>
+                    <div class="mitigation">
+                        <h4>Mitigation Strategy</h4>
+                        <p>Phased funding strategy, revenue milestones, investor partnerships</p>
+                    </div>
+                    
+                    <div class="risk-item">
+                        <h4>Team Expertise</h4>
+                        <p><strong>Risk:</strong> Requirement for highly specialized talent</p>
+                    </div>
+                    <div class="mitigation">
+                        <h4>Mitigation Strategy</h4>
+                        <p>Comprehensive training, expert partnerships, gradual skill building</p>
+                    </div>
+                    
+                    <div class="risk-item">
+                        <h4>Market Timing</h4>
+                        <p><strong>Risk:</strong> Long development cycle may miss market opportunities</p>
+                    </div>
+                    <div class="mitigation">
+                        <h4>Mitigation Strategy</h4>
+                        <p>MVP approach, parallel development tracks, early market validation</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Success Metrics & ROI</h2>
+                
+                <h3>Technical Excellence KPIs</h3>
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="value">&lt;50ms</div>
+                        <div class="label">Global Latency</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="value">99.99%</div>
+                        <div class="label">Platform Uptime</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="value">100%</div>
+                        <div class="label">Proprietary Tech</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="value">Zero</div>
+                        <div class="label">Data Breaches</div>
+                    </div>
+                </div>
+
+                <h3>Long-term ROI Projections</h3>
+                <div class="table-container">
+                    <table class="budget-table">
+                    <thead>
+                        <tr>
+                            <th>Year</th>
+                            <th>Revenue Projection</th>
+                            <th>Key Milestones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Year 1</td>
+                            <td>₹10-20 Crores</td>
+                            <td>MVP launch and initial user base</td>
+                        </tr>
+                        <tr>
+                            <td>Year 2</td>
+                            <td>₹40-80 Crores</td>
+                            <td>Feature completeness and market expansion</td>
+                        </tr>
+                        <tr>
+                            <td>Year 3</td>
+                            <td>₹100-200 Crores</td>
+                            <td>Market leadership and enterprise clients</td>
+                        </tr>
+                        <tr>
+                            <td>Year 5</td>
+                            <td>₹500+ Crores</td>
+                            <td>Global presence and technology licensing</td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+                
+                <div class="highlight-box">
+                    <h4>Additional Revenue Streams</h4>
+                    <ul>
+                        <li><strong>Technology Licensing:</strong> ₹50-100 Crores additional</li>
+                        <li><strong>IP Value:</strong> ₹200-500 Crores estimated</li>
+                        <li><strong>White-label Solutions:</strong> Enterprise revenue</li>
+                        <li><strong>API Marketplace:</strong> Developer ecosystem revenue</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Recommendation</h2>
+                
+                <div class="highlight-box">
+                    <h4>Best Suited For</h4>
+                    <ul>
+                        <li>Well-funded enterprises (₹20+ Crores total budget)</li>
+                        <li>Long-term technology leadership vision</li>
+                        <li>Plans for technology licensing and B2B sales</li>
+                        <li>Complete control and data sovereignty requirements</li>
+                        <li>International expansion with custom solutions</li>
+                    </ul>
+                </div>
+                
+                <div class="highlight-box">
+                    <h4>Strategic Considerations</h4>
+                    <ul class="advantages-list">
+                        <li>Ultimate scalability and control</li>
+                        <li>Proprietary technology development</li>
+                        <li>Multiple revenue streams potential</li>
+                        <li>Market leadership positioning</li>
+                        <li>Long-term competitive advantage</li>
+                    </ul>
+                </div>
+
+                <h3>Next Steps</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h4>1. Secure substantial funding commitment</h4>
+                        <p>Establish investor partnerships and funding rounds</p>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <h4>2. Assemble world-class technical leadership team</h4>
+                        <p>Recruit top-tier architects and technical leads</p>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <h4>3. Begin with comprehensive market research</h4>
+                        <p>Validate market needs and competitive landscape</p>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <h4>4. Develop detailed technical specifications</h4>
+                        <p>Create comprehensive architecture and design documents</p>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <h4>5. Start with Phase 1 MVP approach</h4>
+                        <p>Begin development with core features and infrastructure</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="contact-info">
+                <h3>Contact Information</h3>
+                <div class="contact-details">
+                    <div class="contact-item">
+                        <span>📞</span>
+                        <span><strong>Contact:</strong> Shreeyanshu</span>
+                    </div>
+                    <div class="contact-item">
+                        <span>📱</span>
+                        <span><strong>Phone:</strong> 9904218241</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    // Mobile menu toggle functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const mobileToggle = document.querySelector('.mobile-menu-toggle');
+        const navMenu = document.querySelector('.nav-menu');
+        
+        if (mobileToggle && navMenu) {
+            mobileToggle.addEventListener('click', function() {
+                navMenu.classList.toggle('active');
+                
+                // Update ARIA attributes for accessibility
+                const isOpen = navMenu.classList.contains('active');
+                mobileToggle.setAttribute('aria-expanded', isOpen);
+                mobileToggle.innerHTML = isOpen ? '✕' : '☰';
+            });
+            
+            // Close menu when clicking outside
+            document.addEventListener('click', function(event) {
+                if (!event.target.closest('.navigation')) {
+                    navMenu.classList.remove('active');
+                    mobileToggle.setAttribute('aria-expanded', 'false');
+                    mobileToggle.innerHTML = '☰';
+                }
+            });
+            
+            // Close menu when pressing Escape key
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape' && navMenu.classList.contains('active')) {
+                    navMenu.classList.remove('active');
+                    mobileToggle.setAttribute('aria-expanded', 'false');
+                    mobileToggle.innerHTML = '☰';
+                    mobileToggle.focus();
+                }
+            });
+        }
+    });
+</script>
+</html>
